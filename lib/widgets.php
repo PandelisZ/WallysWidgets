@@ -21,19 +21,17 @@ class Widget {
         $order = array_fill(0 , count($packSizes), 0);
         $remainder = $quantity;
     
-        //no extras for smaller quantities
+        //sorts out the base case of anything less than the smallest value
         if (($remainder <= $packSizes[1]) AND ($remainder > 0 )){ 
             if ($remainder <= $packSizes[0]){
-                //$order[] = $packSizes[0];
                 $order[0] += 1;
             }
             else{
-                // $order[] = $packSizes[1];
                 $order[1] += 1;
             }    
         }
         
-        //calculates how many packs to ship and adds them to an array
+        //calculates the packs to ship
         else {
             while (($remainder > 0) AND ($pointer > 0)){
                 while ($remainder < $packSizes[$pointer]){
@@ -42,7 +40,6 @@ class Widget {
                 if ($pointer < 0){
                     $pointer=0;
                 }
-                    // $order[] = $packSizes[$pointer];
                     $order[$pointer] += 1;
                     $remainder = $remainder - $packSizes[$pointer];
                 } 
@@ -54,9 +51,36 @@ class Widget {
 
     }
 
-    public function getPacks($packs){
+    public function getTotal($quantity){
+        $order = $this->calcPacks($quantity);
+        $total = 0;
 
-                
+         foreach($order as $key => $value){
+            if($value > 0) {
+                $total += $this->_arrPackSizes[$key];
+            }
+        }
+
+        return $total;
+    }
+
+    public function getPacks($quantity){
+
+        $order = $this->calcPacks($quantity);
+
+        $finalOrder = array();
+
+        
+        foreach($order as $key => $value){
+            if($value > 0) {
+                $finalOrder[$this->_arrPackSizes[$key]] = $value;
+            }
+        }
+
+        return $finalOrder;
+        
+
+
 
     }
 
